@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Katam Vani — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0B0E1A; --panel:#121729; --ink:#EEF0FA; --muted:#9198BC; --line:#242B47;
+    --v:#8B5CF6; --c:#22D3EE; --p:#F472B6; --y:#FBBF6E;
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  :root[data-theme="light"] {
+    --bg:#F3F4FA; --panel:#FFFFFF; --ink:#161A2E; --muted:#5C6288; --line:#DEE1F2;
+  }
+  html { scroll-padding-top:env(safe-area-inset-top,0px); height:100%; }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; min-height:100%; color:var(--ink); font-family:'Inter',sans-serif; line-height:1.6;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(139,92,246,0.22), transparent 42%),
+      radial-gradient(circle at 88% 15%, rgba(34,211,238,0.16), transparent 40%),
+      radial-gradient(circle at 30% 95%, rgba(244,114,182,0.14), transparent 45%),
+      var(--bg);
+  }
+  .app { display:flex; min-height:100%; max-width:1080px; margin:0 auto; }
+
+  nav.side { width:260px; flex-shrink:0; padding:44px 22px; border-right:1px solid var(--line); position:sticky; top:0; align-self:flex-start; }
+  .brand { margin-bottom:38px; }
+  .brand .label { font-family:'JetBrains Mono',monospace; font-size:12px; background:linear-gradient(90deg,var(--v),var(--c)); -webkit-background-clip:text; background-clip:text; color:transparent; margin:0 0 8px; }
+  .brand h1 { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:27px; margin:0 0 4px; }
+  .brand .role { font-size:13px; color:var(--muted); margin:0; }
+
+  .navlist { list-style:none; margin:0; padding:0; }
+  .navlist li { margin-bottom:3px; }
+  .navlist button {
+    all:unset; cursor:pointer; display:flex; align-items:center; gap:11px; width:100%;
+    padding:11px 13px; border-radius:8px; font-size:14.5px; color:var(--muted); border-left:2px solid transparent;
+  }
+  .navlist button .dot { width:7px; height:7px; border-radius:50%; background:var(--line); flex-shrink:0; }
+  .navlist button:hover { color:var(--ink); background:var(--panel); }
+  .navlist button.active { color:var(--ink); font-weight:600; background:var(--panel); }
+  .navlist button.active .dot { background:var(--dotcolor,var(--v)); box-shadow:0 0 10px var(--dotcolor,var(--v)); }
+  .navlist button:focus-visible { outline:2px solid var(--c); outline-offset:2px; }
+
+  main { flex:1; padding:44px 34px 90px; min-width:0; }
+  .panel { display:none; animation:fade .4s ease; }
+  .panel.active { display:block; }
+  @keyframes fade { from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+  @media (prefers-reduced-motion: reduce) { .panel { animation:none; } }
+
+  h2 { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:28px; margin:0 0 22px; }
+  h2 span.grad { background:linear-gradient(90deg,var(--h1,var(--v)),var(--h2,var(--c))); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  p.lede { color:var(--muted); font-size:16px; max-width:60ch; }
+  .contact-row { display:flex; flex-wrap:wrap; gap:10px 18px; font-size:13.5px; color:var(--muted); margin-top:22px; }
+  .contact-row a { color:var(--ink); text-decoration:none; border-bottom:1px solid var(--v); }
+  .contact-row a:hover { color:var(--v); }
+
+  .edu-item, .cert-item {
+    display:grid; grid-template-columns:100px 1fr; gap:18px; padding:16px 18px; margin-bottom:10px;
+    background:var(--panel); border-radius:10px; border:1px solid var(--line); font-size:14.5px;
+  }
+  .edu-item { border-left:3px solid var(--edgecolor,var(--v)); }
+  .cert-item { border-left:3px solid var(--edgecolor,var(--c)); }
+  .edu-year, .cert-org { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); }
+  .edu-score { font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--v); }
+
+  .skills { display:flex; flex-direction:column; gap:14px; max-width:480px; }
+  .skill-row { }
+  .skill-top { display:flex; justify-content:space-between; font-size:14px; margin-bottom:6px; }
+  .skill-top .name { font-weight:600; }
+  .skill-top .lvl { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); }
+  .bar-track { height:8px; border-radius:5px; background:var(--panel); border:1px solid var(--line); overflow:hidden; }
+  .bar-fill { height:100%; border-radius:5px; width:0; transition:width 1s cubic-bezier(.2,.8,.2,1); background:linear-gradient(90deg,var(--bc1),var(--bc2)); }
+
+  .project { background:var(--panel); border:1px solid var(--line); border-radius:12px; margin-bottom:14px; overflow:hidden; border-left:3px solid var(--edgecolor,var(--v)); }
+  .project button.p-head { all:unset; cursor:pointer; display:flex; justify-content:space-between; align-items:center; width:100%; padding:18px 20px; font-size:16px; font-weight:600; font-family:'Space Grotesk',sans-serif; }
+  .project .chev { font-family:'JetBrains Mono',monospace; color:var(--muted); transition:transform .25s ease; }
+  .project.open .chev { transform:rotate(45deg); color:var(--edgecolor,var(--v)); }
+  .project .p-body { display:none; padding:0 20px 20px; }
+  .project.open .p-body { display:block; }
+  .project ul { margin:0; padding-left:18px; color:var(--muted); font-size:14.5px; }
+  .project li { margin-bottom:5px; }
+  .tag { display:inline-block; font-family:'JetBrains Mono',monospace; font-size:11px; padding:3px 9px; border-radius:20px; margin:0 6px 10px 0; color:var(--ink); background:color-mix(in srgb, var(--edgecolor,var(--v)) 22%, transparent); }
+
+  .theme-toggle { all:unset; cursor:pointer; margin-top:30px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); border:1px solid var(--line); padding:8px 12px; border-radius:8px; display:inline-block; }
+  .theme-toggle:hover { color:var(--ink); border-color:var(--v); }
+
+  @media (max-width:760px) {
+    .app { flex-direction:column; }
+    nav.side { width:100%; position:sticky; top:0; z-index:5; background:var(--bg); border-right:none; border-bottom:1px solid var(--line); padding:20px; }
+    .navlist { display:flex; overflow-x:auto; gap:4px; }
+    .navlist li { margin:0; }
+    .navlist button { white-space:nowrap; }
+    .edu-item, .cert-item { grid-template-columns:1fr; gap:4px; }
+    main { padding:30px 20px 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="side" aria-label="Portfolio sections">
+    <div class="brand">
+      <p class="label">◆ portfolio</p>
+      <h1>Katam Vani</h1>
+      <p class="role">AI &amp; ML student</p>
+    </div>
+    <ul class="navlist" id="navlist">
+      <li><button class="active" data-panel="about" data-dot="#8B5CF6"><span class="dot"></span> About</button></li>
+      <li><button data-panel="education" data-dot="#22D3EE"><span class="dot"></span> Education</button></li>
+      <li><button data-panel="skills" data-dot="#F472B6"><span class="dot"></span> Skills</button></li>
+      <li><button data-panel="projects" data-dot="#FBBF6E"><span class="dot"></span> Projects</button></li>
+      <li><button data-panel="certs" data-dot="#22D3EE"><span class="dot"></span> Certifications</button></li>
+    </ul>
+    <button class="theme-toggle" id="themeBtn">☾ toggle theme</button>
+  </nav>
+
+  <main>
+    <section class="panel active" id="about">
+      <h2><span class="grad" style="--h1:#8B5CF6;--h2:#22D3EE">About</span></h2>
+      <p class="lede">Seeking an opportunity in a dynamic and growth-oriented organization where I can enhance my technical skills, take on challenging responsibilities, and contribute effectively to organizational success while achieving my professional goals.</p>
+      <div class="contact-row">
+        <span>Edavalli, Chilakaluripet, Andhra Pradesh</span>
+        <a href="mailto:vanikatam5@gmail.com">vanikatam5@gmail.com</a>
+        <span>9032690948</span>
+        <a href="https://linkedin.com/in/VaniKatam" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a href="https://github.com/VaniKatam" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </section>
+
+    <section class="panel" id="education">
+      <h2><span class="grad" style="--h1:#22D3EE;--h2:#8B5CF6">Education</span></h2>
+      <div class="edu-item" style="--edgecolor:#8B5CF6"><div class="edu-year">2024–2028</div><div><strong>B.Tech, AI &amp; ML</strong><br>Narasaraopeta Engineering College <span class="edu-score">· 92%</span></div></div>
+      <div class="edu-item" style="--edgecolor:#22D3EE"><div class="edu-year">2024</div><div><strong>Intermediate</strong><br>SR Jr College <span class="edu-score">· 93%</span></div></div>
+      <div class="edu-item" style="--edgecolor:#F472B6"><div class="edu-year">2022</div><div><strong>SSC</strong><br>Bhashyam High School <span class="edu-score">· 97%</span></div></div>
+    </section>
+
+    <section class="panel" id="skills">
+      <h2><span class="grad" style="--h1:#F472B6;--h2:#FBBF6E">Skills</span></h2>
+      <div class="skills">
+        <div class="skill-row"><div class="skill-top"><span class="name">Python</span><span class="lvl">core</span></div><div class="bar-track"><div class="bar-fill" data-w="82%" style="--bc1:#8B5CF6;--bc2:#22D3EE"></div></div></div>
+        <div class="skill-row"><div class="skill-top"><span class="name">Machine Learning basics</span><span class="lvl">growing</span></div><div class="bar-track"><div class="bar-fill" data-w="60%" style="--bc1:#F472B6;--bc2:#8B5CF6"></div></div></div>
+        <div class="skill-row"><div class="skill-top"><span class="name">HTML / CSS</span><span class="lvl">solid</span></div><div class="bar-track"><div class="bar-fill" data-w="70%" style="--bc1:#22D3EE;--bc2:#FBBF6E"></div></div></div>
+        <div class="skill-row"><div class="skill-top"><span class="name">MS Excel</span><span class="lvl">solid</span></div><div class="bar-track"><div class="bar-fill" data-w="75%" style="--bc1:#FBBF6E;--bc2:#F472B6"></div></div></div>
+        <div class="skill-row"><div class="skill-top"><span class="name">MS Word</span><span class="lvl">solid</span></div><div class="bar-track"><div class="bar-fill" data-w="78%" style="--bc1:#8B5CF6;--bc2:#F472B6"></div></div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="projects">
+      <h2><span class="grad" style="--h1:#FBBF6E;--h2:#F472B6">Projects</span></h2>
+      <div class="project" style="--edgecolor:#8B5CF6">
+        <button class="p-head">Student Performance Analysis <span class="chev">+</span></button>
+        <div class="p-body">
+          <span class="tag" style="--edgecolor:#8B5CF6">data cleaning</span><span class="tag" style="--edgecolor:#8B5CF6">EDA</span>
+          <ul>
+            <li>Analyzed student academic performance data</li>
+            <li>Identified missing values and inconsistencies in datasets</li>
+            <li>Performed data cleaning and basic analysis to generate insights</li>
+            <li>Improved understanding of data analytics and reporting</li>
+          </ul>
+        </div>
+      </div>
+      <div class="project" style="--edgecolor:#22D3EE">
+        <button class="p-head">House Price Prediction <span class="chev">+</span></button>
+        <div class="p-body">
+          <span class="tag" style="--edgecolor:#22D3EE">regression</span><span class="tag" style="--edgecolor:#22D3EE">ML</span>
+          <ul>
+            <li>Applied machine-learning regression techniques to predict house prices</li>
+            <li>Used basic property details as input for prediction</li>
+          </ul>
+        </div>
+      </div>
+      <div class="project" style="--edgecolor:#F472B6">
+        <button class="p-head">Community Service — Plastic Usage Awareness <span class="chev">+</span></button>
+        <div class="p-body">
+          <span class="tag" style="--edgecolor:#F472B6">outreach</span>
+          <ul>
+            <li>Created awareness camps and conducted voluntary drives in villages</li>
+            <li>Promoted responsible plastic usage and community participation</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="certs">
+      <h2><span class="grad" style="--h1:#22D3EE;--h2:#FBBF6E">Certifications</span></h2>
+      <div class="cert-item" style="--edgecolor:#8B5CF6"><div class="cert-org">Viksha Tech Solutions</div><div>AWS Cloud Computing Workshop</div></div>
+      <div class="cert-item" style="--edgecolor:#22D3EE"><div class="cert-org">Finity Innovation LLP</div><div>Python, NumPy &amp; Pandas with EDA Projects</div></div>
+      <div class="cert-item" style="--edgecolor:#F472B6"><div class="cert-org">NPTEL</div><div>Python for Data Science</div></div>
+      <div class="cert-item" style="--edgecolor:#FBBF6E"><div class="cert-org">Infosys Springboard</div><div>Introduction to AI</div></div>
+    </section>
+  </main>
+</div>
+
+<script>
+  const buttons = document.querySelectorAll('#navlist button');
+  const panels = document.querySelectorAll('.panel');
+  function activatePanel(id, dot) {
+    buttons.forEach(x => x.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+    const btn = [...buttons].find(b => b.dataset.panel === id);
+    btn.classList.add('active');
+    btn.style.setProperty('--dotcolor', dot);
+    document.getElementById(id).classList.add('active');
+    if (id === 'skills') animateBars();
+  }
+  buttons.forEach(b => b.addEventListener('click', () => activatePanel(b.dataset.panel, b.dataset.dot)));
+
+  function animateBars() {
+    document.querySelectorAll('.bar-fill').forEach(f => { f.style.width = f.dataset.w; });
+  }
+
+  document.querySelectorAll('.project').forEach(p => {
+    p.querySelector('.p-head').addEventListener('click', () => p.classList.toggle('open'));
+  });
+
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const root = document.documentElement;
+    root.setAttribute('data-theme', root.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+  });
+</script>
+</body>
+</html>
